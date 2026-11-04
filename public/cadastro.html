@@ -10,36 +10,60 @@
 
   <script src="./js/sessao.js"></script>
 
-  <link rel="stylesheet" href="./css/estilo.css" />
+  <link rel="stylesheet" href="./css/cadLog.css" />
   <link rel="icon" href="./assets/icon/favicon2.ico" />
   <link rel="preconnect" href="https://fonts.gstatic.com" />
 </head>
 
 <body onload="listar()">
   <!--header inicio-->
-  <div class="header">
-    <div class="container">
-      <h1 class="titulo">AquaTech</h1>
-      <ul class="navbar">
-        <li>
-          <a href="index.html">Inicial</a>
-        </li>
-        <li>
-          <a href="simulador.html">Simulador</a>
-        </li>
-        <li>|</li>
-        <li>
-          <a href="login.html">Login</a>
-        </li>
-        <li class="agora">
-          <a href="#">Cadastro</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <!--header fim-->
 
-  <div class="login">
+  <div class="container">
+    <!-- Lado direito: formulário -->
+    <div class="lado-direito">
+      <div class="formulario">
+        <h1>Olá!</h1>
+        <p>Cadastre-se e comece<br>agora a gestão da sua usina!</p>
+
+        <div class="campo">
+          <img src="assets/icons/circle-user.svg" alt="">
+          <input type="text" placeholder="Nome Completo" id="ipt_nome">
+        </div>
+        <div id="div_msg_nome"></div>
+
+        <div class="campo">
+          <img src="assets/icons/mail.svg" alt="">
+          <input type="text" placeholder="seu@email.com" id="ipt_email">
+        </div>
+        <div id="div_msg_email"></div>
+
+        <div class="campo">
+          <img src="assets/icons/lock.svg" alt="">
+          <input type="password" placeholder="Senha" id="ipt_senha">
+        </div>
+        <div id="div_msg_senha"></div>
+
+        <div class="campo">
+          <img src="assets/icons/lock.svg" alt="">
+          <input type="password" placeholder="Confirme a Senha" id="ipt_confirmacao">
+        </div>
+        <div id="div_msg_confirmacao"></div>
+
+        <button onclick="cadastrar()">Cadastrar</button>
+      </div>
+    </div>
+
+    <!-- Lado esquerdo: logo -->
+        <div class="lado-esquerdo">
+            <video autoplay muted loop playsinline id="background-video">
+                <source src="assets/videos/cadastro.mp4" type="video/mp4">
+            </video>
+        </div>
+    
+  </div>
+
+
+  <!-- <div class="login">
     <div class="alerta_erro">
       <div class="card_erro" id="cardErro">
         <span id="mensagem_erro"></span>
@@ -49,10 +73,6 @@
       <div class="card card-cadastro">
         <h2>Bem-vindo!</h2>
         <div class="formulario">
-          <!--
-                         Para inserir mais um campo, copie uma das inputs abaixo.
-                         Assim que inserir vá para o script abaixo.
-                     -->
           <div class="campo">
             <span>Código de ativação:</span>
             <input id="codigo_input" type="text" placeholder="Insira aqui seu código" />
@@ -84,13 +104,11 @@
     </div>
   </div>
 
-  <!--footer inicio-->
   <div class="footer">
     <div class="container">
       <h4>Feito com amor por aluno &hearts; SPTech &copy; 2023-2026</h4>
     </div>
-  </div>
-  <!--footer fim-->
+  </div> -->
 </body>
 
 </html>
