@@ -10,14 +10,48 @@
 
     <script src="./js/sessao.js"></script>
 
-    <link rel="stylesheet" href="./css/estilo.css">
+    <link rel="stylesheet" href="./css/cadlog.css">
     <link rel="icon" href="./assets/icon/favicon2.ico">
     <link rel="preconnect" href="https://fonts.gstatic.com">
 </head>
 
 <body>
 
-    <!--Header-->
+    <div class="container">
+
+        <!-- Lado esquerdo: logo -->
+        <div class="lado-esquerdo">
+            <video autoplay muted loop playsinline id="background-video">
+                <source src="assets/videos/login.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <!-- Lado direito: formulário -->
+        <div class="lado-direito">
+            <div class="formulario">
+                <h1>Bem-vindo de Volta!</h1>
+                <p>Realize seu login</p>
+
+                <div class="campo">
+                    <img src="assets/icons/mail.svg" alt="">
+                    <input type="text" placeholder="seu@email.com" id="email_input">
+
+                </div>
+                <div id="div_msg_email"></div>
+
+                <div class="campo">
+                    <img src="assets/icons/lock.svg" alt="">
+                    <input type="password" placeholder="*******************" id="senha_input">
+                </div>
+                <div id="div_msg_senha"></div>
+
+                <button onclick="entrar()">Login</button>
+
+                <a href="#" class="esqueceu">Esqueceu a senha?</a>
+            </div>
+        </div>
+        <!-- 
+  </div>
 
     <div class="header">
         <div class="container">
@@ -71,13 +105,12 @@
         </div>
     </div>
 
-    <!--footer inicio-->
     <div class="footer">
         <div class="container">
             <h4>Feito com amor por aluno &hearts; SPTech &copy; 2023-2026</h4>
         </div>
     </div>
-    <!--footer fim-->
+    footer fim -->
 
 </body>
 

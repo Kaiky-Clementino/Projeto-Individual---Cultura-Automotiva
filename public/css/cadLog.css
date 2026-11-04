@@ -1,0 +1,111 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: #333333;
+}
+
+/* Container principal: coloca os dois lados lado a lado */
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+/* ---------- Lado esquerdo ---------- */
+.lado-esquerdo {
+  width: 50%;
+  height: 100vh; /* Garante que a div ocupe toda a altura da tela */
+  position: relative; /* Necessário para posicionar o vídeo esticado dentro dela */
+  overflow: hidden; /* Corta o que passar das bordas da div */
+  background: linear-gradient(#04201d, #133830);
+}
+
+#background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Faz o vídeo preencher tudo e se recortar sem distorcer */
+  object-position: center; /* Mantém o centro do vídeo (o carro) focado */
+}
+
+
+/* ---------- Lado direito ---------- */
+.lado-direito {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1F1F1F;
+}
+
+.formulario {
+  width: 340px;
+  display: flex;
+  flex-direction: column; /* itens um embaixo do outro */
+  text-align: center;
+}
+
+.formulario h1 {
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.formulario p {
+  color: white;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+
+.campo {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 15px;
+  margin-bottom: 10px;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.campo img {
+  width: 16px;
+  margin-right: 10px;
+}
+
+.campo input {    
+  border: none;
+  outline: none; /* remove a borda quando selecionado */
+  font-size: 12px;
+}
+
+/* ---------- Botão ---------- */
+button {
+  height: 30px;
+  border: none;
+  border-radius: 4px;
+  background-color: #D71720;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.esqueceu {
+  margin-top: 25px;
+  font-size: 12px;
+  color: whitesmoke;
+  text-decoration: none;
+}
+
+.esqueceu:hover{
+
+  color: #133830;
+  font-weight: 600;
+}
