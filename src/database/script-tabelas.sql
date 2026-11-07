@@ -1,58 +1,31 @@
--- Arquivo de apoio, caso você queira criar tabelas como as aqui criadas para a API funcionar.
--- Você precisa executar os comandos no banco de dados para criar as tabelas,
--- ter este arquivo aqui não significa que a tabela em seu BD estará como abaixo!
+CREATE DATABASE automobilismo;
 
-/*
-comandos para mysql server
-*/
-
-CREATE DATABASE aquatech;
-
-USE aquatech;
-
-CREATE TABLE empresa (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	razao_social VARCHAR(50),
-	cnpj CHAR(14),
-	codigo_ativacao VARCHAR(50)
-);
+USE automobilismo;
 
 CREATE TABLE usuario (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	nome VARCHAR(50),
-	email VARCHAR(50),
-	senha VARCHAR(50),
-	fk_empresa INT,
-	FOREIGN KEY (fk_empresa) REFERENCES empresa(id)
+	nome VARCHAR(50) NOT NULL,
+	email VARCHAR(50) NOT NULL,
+	senha VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE aviso (
+CREATE TABLE carro (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	titulo VARCHAR(100),
-	descricao VARCHAR(150),
-	fk_usuario INT,
-	FOREIGN KEY (fk_usuario) REFERENCES usuario(id)
+	modelo VARCHAR(50) NOT NULL,
+	montadora VARCHAR(50) NOT NULL,
+    estilo VARCHAR(50) NOT NULL
 );
 
-create table aquario (
-/* em nossa regra de negócio, um aquario tem apenas um sensor */
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	descricao VARCHAR(300),
-	fk_empresa INT,
-	FOREIGN KEY (fk_empresa) REFERENCES empresa(id)
+CREATE TABLE favorito(
+	fk_usuario INT NOT NULL,
+    fk_carro INT NOT NULL,
+    PRIMARY KEY(fk_usuario, fk_carro),
+    FOREIGN KEY (fk_usuario) REFERENCES usuario(id),
+    FOREIGN KEY (fk_carro) REFERENCES carro(id)
 );
 
-/* esta tabela deve estar de acordo com o que está em INSERT de sua API do arduino - dat-acqu-ino */
-
-create table medida (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	temperatura DECIMAL,
-	momento DATETIME,
-	fk_aquario INT,
-	FOREIGN KEY (fk_aquario) REFERENCES aquario(id)
-);
-
-insert into empresa (razao_social, codigo_ativacao) values ('Empresa 1', 'ED145B');
-insert into empresa (razao_social, codigo_ativacao) values ('Empresa 2', 'A1B2C3');
-insert into aquario (descricao, fk_empresa) values ('Aquário de Estrela-do-mar', 1);
-insert into aquario (descricao, fk_empresa) values ('Aquário de Peixe-dourado', 2);
+INSERT INTO carro() VALUES
+	(DEFAULT, 'kadett', 'chevrolet', 'original'),
+	(DEFAULT, 'opala', 'chevrolet', 'original'),
+	(DEFAULT, 'gol gti', 'volkswagen', 'street'),
+    (DEFAULT, 'f40', 'ferrari', 'original');

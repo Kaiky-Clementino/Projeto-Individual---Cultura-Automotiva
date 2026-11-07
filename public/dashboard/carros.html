@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carros</title>
+    <script src="../js/sessao.js"></script>
+</head>
+
+<body onload="validarSessao(); listarCarros()">
+    <h1>Olá, <span id="b_usuario"></span>!</h1>
+    <button onclick="limparSessao()">Sair</button>
+
+    <div id="lista_carros"></div>
+</body>
+
+<script>
+    function listarCarros() {
+        fetch(`/carros/listar/${sessionStorage.ID_USUARIO}`)
+            .then(resposta => resposta.json())
+            .then(carros => {
+                lista_carros.innerHTML = "";
+
+                carros.forEach(carro => {
+                    lista_carros.innerHTML += `
+                        <div>
+                            <h3>${carro.modelo}</h3>
+                            <p>${carro.montadora} - ${carro.estilo}</p>
+                            <button onclick="alternarFavorito(${carro.id}, ${carro.favorito})">
+                                ${carro.favorito ? "★ Desfavoritar" : "☆ Favoritar"}
+                            </button>
+                        </div>`;
+                });
+            })
+            .catch(erro => console.log(erro));
+    }
+
+function alternarFavorito(idCarro, favorito) {
+    var promessa;
+
+    if (favorito) {
+        promessa = fetch(`/favoritos/desfavoritar/${sessionStorage.ID_USUARIO}/${idCarro}`, {
+            method: "DELETE"
+        });
+    } else {
+        promessa = fetch("/favoritos/favoritar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                idUsuarioServer: sessionStorage.ID_USUARIO,
+                idCarroServer: idCarro
+            })
+        });
+    }
+
+    promessa
+        .then(function (resposta) {
+            if (!resposta.ok) {
+                resposta.text().then(texto => alert(`Erro ${resposta.status}: ${texto}`));
+            } else {
+                listarCarros();
+            }
+        })
+        .catch(function (erro) {
+            alert("Falha ao conectar com a API: " + erro);
+        });
+}
+</script>
+</html>
