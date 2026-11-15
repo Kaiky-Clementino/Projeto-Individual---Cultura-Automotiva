@@ -22,38 +22,33 @@
     <!-- Lado direito: formulário -->
     <div class="lado-direito">
       <div class="formulario">
-        <h1>Olá!</h1>
-        <p>Cadastre-se e comece<br>agora a gestão da sua usina!</p>
+        <h1>OLÁ!</h1>
+        <br>
+        <p>Cadastre-se e,<br>comece agora mesmo nessa cultura!</p>
 
         <div class="campo">
-          <img src="assets/icons/circle-user.svg" alt="">
-          <input type="text" placeholder="Nome Completo" id="ipt_nome">
+          <input type="text" placeholder="Nome Completo" id="ipt_nome" class="inserts">
         </div>
-        <div id="div_msg_nome"></div>
+        <div id="div_msg_nome" class="div_erros"></div>
 
         <div class="campo">
-          <img src="assets/icons/mail.svg" alt="">
-          <input type="text" placeholder="seu@email.com" id="ipt_email">
+          <input type="text" placeholder="seu@email.com" id="ipt_email" class="inserts">
         </div>
-        <div id="div_msg_email"></div>
+        <div id="div_msg_email" class="div_erros"></div>
 
         <div class="campo">
-          <img src="assets/icons/lock.svg" alt="">
-          <input type="password" placeholder="Senha" id="ipt_senha">
+          <input type="password" placeholder="Senha" id="ipt_senha" class="inserts">
         </div>
-        <div id="div_msg_senha"></div>
+        <div id="div_msg_senha" class="div_erros"></div>
 
         <div class="campo">
-          <img src="assets/icons/lock.svg" alt="">
-          <input type="password" placeholder="Confirme a Senha" id="ipt_confirmacao">
+          <input type="password" placeholder="Confirme a Senha" id="ipt_confirmacao" class="inserts">
         </div>
-        <div id="div_msg_confirmacao"></div>
+        <div id="div_msg_confirmacao" class="div_erros"></div>
 
         <button onclick="cadastrar()">Cadastrar</button>
       </div>
     </div>
-
-    <!-- Lado esquerdo: logo -->
         <div class="lado-esquerdo">
             <video autoplay muted loop playsinline id="background-video">
                 <source src="assets/videos/cadastro.mp4" type="video/mp4">
@@ -61,54 +56,6 @@
         </div>
     
   </div>
-
-
-  <!-- <div class="login">
-    <div class="alerta_erro">
-      <div class="card_erro" id="cardErro">
-        <span id="mensagem_erro"></span>
-      </div>
-    </div>
-    <div class="container">
-      <div class="card card-cadastro">
-        <h2>Bem-vindo!</h2>
-        <div class="formulario">
-          <div class="campo">
-            <span>Código de ativação:</span>
-            <input id="codigo_input" type="text" placeholder="Insira aqui seu código" />
-          </div>
-          <div class="campo">
-            <span>Nome:</span>
-            <input id="nome_input" type="text" placeholder="Seu nome" />
-          </div>
-          <div class="campo">
-            <span>E-mail:</span>
-            <input id="email_input" type="text" placeholder="meuemail@provedor.com" />
-          </div>
-          <div class="campo">
-            <span>Senha:</span>
-            <input id="senha_input" type="password" placeholder="******" />
-          </div>
-          <div class="campo">
-            <span>Confirmação da Senha:</span>
-            <input id="confirmacao_senha_input" type="password" placeholder="******" />
-          </div>
-          <button class="botao" onclick="cadastrar()">Cadastrar</button>
-        </div>
-        <div id="div_aguardar" class="loading-div">
-          <img src="./assets/circle-loading.gif" id="loading-gif" />
-        </div>
-
-        <div id="div_erros_login"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <div class="container">
-      <h4>Feito com amor por aluno &hearts; SPTech &copy; 2023-2026</h4>
-    </div>
-  </div> -->
 </body>
 
 </html>
@@ -120,16 +67,25 @@
         var senhaVar = ipt_senha.value;
         var confirmacaoVar = ipt_confirmacao.value;
 
+        div_msg_nome.innerHTML = "";
+        div_msg_email.innerHTML = "";
+        div_msg_senha.innerHTML = "";
         div_msg_confirmacao.innerHTML = "";
 
-        if (nomeVar == "" || emailVar == "" || senhaVar == "" || confirmacaoVar == "") {
+        if (nomeVar == "") {
+            div_msg_nome.innerHTML = "Preencha seu nome.";
+          }
+        if(emailVar == ""){
+            div_msg_email.innerHTML = "Preencha seu email.";
+          }
+        if(senhaVar == ""){
+            div_msg_senha.innerHTML = "Preencha todos os campos.";
+          }
+        if(confirmacaoVar == ""){
             div_msg_confirmacao.innerHTML = "Preencha todos os campos.";
-            return false;
         }
-
         if (senhaVar != confirmacaoVar) {
             div_msg_confirmacao.innerHTML = "As senhas não conferem.";
-            return false;
         }
 
         fetch("/usuarios/cadastrar", {

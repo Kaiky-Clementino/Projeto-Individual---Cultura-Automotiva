@@ -37,80 +37,19 @@
                     <input type="text" placeholder="seu@email.com" id="email_input">
 
                 </div>
-                <div id="div_msg_email"></div>
+                <div id="div_msg_email" class="div_erros"></div>
 
                 <div class="campo">
                     <img src="assets/icons/lock.svg" alt="">
                     <input type="password" placeholder="*******************" id="senha_input">
                 </div>
-                <div id="div_msg_senha"></div>
+                <div id="div_msg_senha" class="div_erros"></div>
 
                 <button onclick="entrar()">Login</button>
 
                 <a href="#" class="esqueceu">Esqueceu a senha?</a>
             </div>
         </div>
-        <!-- 
-  </div>
-
-    <div class="header">
-        <div class="container">
-            <h1 class="titulo">AquaTech</h1>
-            <ul class="navbar">
-                <li>
-                    <a href="index.html">Inicial</a>
-                </li>
-                <li>
-                    <a href="simulador.html">Simulador</a>
-                </li>
-                <li>|</li>
-                <li class="agora">
-                    <a href="#">Login</a>
-                </li>
-                <li>
-                    <a href="cadastro.html">Cadastro</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-
-    <div class="login">
-        <div class="alerta_erro">
-            <div class="card_erro" id="cardErro">
-                <span id="mensagem_erro"></span>
-            </div>
-        </div>
-        <div class="container">
-            <div class="card card-login">
-                <h2>Olá de volta!</h2>
-                <div class="formulario">
-                    <div class="campo">
-                        <span>E-mail:</span>
-                        <input id="email_input" type="text" placeholder="Login">
-                    </div>
-                    <div class="campo">
-                        <span>Senha:</span>
-                        <input id="senha_input" type="password" placeholder="******">
-                    </div>
-                    <button class="botao" onclick="entrar()">Entrar</button>
-                </div>
-
-                <div id="div_aguardar" class="loading-div">
-                    <img src="./assets/circle-loading.gif" id="loading-gif">
-                </div>
-
-                <div id="div_erros_login"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="footer">
-        <div class="container">
-            <h4>Feito com amor por aluno &hearts; SPTech &copy; 2023-2026</h4>
-        </div>
-    </div>
-    footer fim -->
 
 </body>
 
@@ -121,11 +60,15 @@
         var emailVar = email_input.value;
         var senhaVar = senha_input.value;
 
+        div_msg_email.innerHTML = "";
         div_msg_senha.innerHTML = "";
 
-        if (emailVar == "" || senhaVar == "") {
-            div_msg_senha.innerHTML = "Preencha e-mail e senha.";
-            return false;
+        if (emailVar == "") {
+            div_msg_email.innerHTML = "Preencha seu e-mail.";
+        }
+        
+        if (senhaVar == ""){
+            div_msg_senha.innerHTML = "Preencha sua senha.";
         }
 
         fetch("/usuarios/autenticar", {
@@ -142,7 +85,7 @@
                     sessionStorage.NOME_USUARIO = json.nome;
                     sessionStorage.ID_USUARIO = json.id;
 
-                    window.location = "./dashboard/carros.html";
+                    window.location = "./dashboard/favoritos.html";
                 });
             } else {
                 resposta.text().then(texto => {
