@@ -13,7 +13,8 @@ CREATE TABLE carro (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	modelo VARCHAR(50) NOT NULL,
 	montadora VARCHAR(50) NOT NULL,
-    estilo VARCHAR(50) NOT NULL
+    estilo VARCHAR(50) NOT NULL,
+	ano CHAR(4) NOT NULL
 );
 
 CREATE TABLE favorito(
@@ -25,7 +26,10 @@ CREATE TABLE favorito(
 );
 
 INSERT INTO carro() VALUES
-	(DEFAULT, 'kadett', 'chevrolet', 'original'),
-	(DEFAULT, 'opala', 'chevrolet', 'original'),
-	(DEFAULT, 'gol gti', 'volkswagen', 'street'),
-    (DEFAULT, 'f40', 'ferrari', 'original');
+	(DEFAULT, 'kadett', 'chevrolet', 'original', '1984'),
+	(DEFAULT, 'opala', 'chevrolet', 'original', '1971'),
+	(DEFAULT, 'quattro', 'audi', 'rally', '1980'),
+	(DEFAULT, 'eclipse', 'mitsubishi', 'jdm', '1998'),
+	(DEFAULT, 'jesko', 'koenigsegg', 'hiper', '2019'),
+	(DEFAULT, 'charger', 'dodge', 'muscle', '1970'),
+    (DEFAULT, 'f40', 'ferrari', 'original', '1993');
