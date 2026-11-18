@@ -1,7 +1,7 @@
 var database = require("../database/config");
 
 function listar() {
-    var instrucaoSql = `SELECT id, modelo, montadora, estilo FROM carro;`;
+    var instrucaoSql = `SELECT id, modelo, montadora, estilo, ano FROM carro;`;
     return database.executar(instrucaoSql);
 }
 
@@ -16,7 +16,7 @@ function cadastrar(nome) {
 // favorito = 1 se o usuário já favoritou o carro, 0 se não
 function listarComFavoritos(idUsuario) {
     var instrucaoSql = `
-        SELECT c.id, c.modelo, c.montadora, c.estilo,
+        SELECT c.id, c.modelo, c.montadora, c.estilo, c.ano,
                IF(f.fk_usuario IS NULL, 0, 1) AS favorito
         FROM carro c
             LEFT JOIN favorito f

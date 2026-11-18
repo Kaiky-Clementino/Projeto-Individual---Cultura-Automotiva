@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,126 +10,162 @@
 </head>
 
 <body onload="/*validarSessao();*/ carregarCarros()">
-    <main class="page">
-        <header class="topbar">
-            <h1>Ola, <span id="b_usuario"></span>!</h1>
-            <button class="btn-sair" onclick="limparSessao()">Sair</button>
-        </header>
+    <header>
+        <nav class="barra-navegacao container-principal">
+            <div id="logo_nav"><img src="../assets/logo_branco.png" id="logo"></div>
+            <a href="../index.html" class="item-menu">HOME</a>
+            <a href="#" class="item-menu" style="background-color: #f3ff49; color: #08090c;">FAVORITOS</a>
+            <a href="dashboard.html" class="item-menu">DASHBOARD</a>
+            <a class="botao-sair" onclick="limparSessao()">SAIR</a>
+        </nav>
+    </header>
 
-        <section class="content" id="conteudo">
-            <article class="car-view" id="detalhe_carro">
-                <div class="car-image-wrap">
-                    <img id="imagem_carro" src="../assets/banner_fordgt.png" alt="Imagem do carro selecionado">
-                </div>
+    <main class="page" id="conteudo">
+        <!-- Painel principal: montadora | carro | informações -->
+        <section class="painel">
+            <div class="bloco bloco-montadora">
+                <img id="imagem_montadora" src="" alt="Montadora">
+            </div>
 
+            <div class="bloco bloco-carro">
                 <div class="car-info">
                     <h2 id="titulo_modelo">Selecione um carro</h2>
-                    <p id="texto_detalhes">Escolha um dos botoes ao lado para ver os detalhes.</p>
-                    <button id="btn_favorito" class="btn-favorito" onclick="alternarFavoritoAtual()" disabled>
-                        Favoritar
-                    </button>
+                    <p id="texto_montadora">Escolha um dos carros abaixo.</p>
+                    <p id="texto_ano" class="ano"></p>
                 </div>
-            </article>
+                <span id="texto_categoria" class="categoria"></span>
+                <div class="car-image-wrap">
+                    <img id="imagem_carro" src="" alt="Imagem do carro selecionado">
+                </div>
+            </div>
 
-            <aside class="selector-card">
-                <h3>Trocar visualizacao</h3>
-                <div id="lista_botoes" class="selector-list"></div>
+            <aside class="bloco bloco-lateral">
+                <div class="linha-stats">
+                    <div class="badge-classe">
+                        <span id="classe_letra" class="classe-letra">-</span>
+                        <span id="classe_pontos" class="classe-pontos">0</span>
+                    </div>
+                    <div class="tag-tracao" id="tracao">--</div>
+                </div>
+                <div class="caixa-cinza"></div>
+                <button id="btn_favorito" class="btn-favorito" onclick="alternarFavoritoAtual()" disabled>
+                    FAVORITAR
+                </button>
             </aside>
         </section>
+
+        <!-- Miniaturas dos carros -->
+        <section id="lista_botoes" class="miniaturas"></section>
     </main>
-</body>
 
-<script>
-    const imagemPadrao = "../assets/banner_fordgt.png";
-    const conteudo = document.getElementById("conteudo");
-    const listaBotoes = document.getElementById("lista_botoes");
-    const imagemCarro = document.getElementById("imagem_carro");
-    const tituloModelo = document.getElementById("titulo_modelo");
-    const textoDetalhes = document.getElementById("texto_detalhes");
-    const btnFavorito = document.getElementById("btn_favorito");
+    <script>
+        const conteudo = document.getElementById("conteudo");
+        const listaBotoes = document.getElementById("lista_botoes");
+        const imagemCarro = document.getElementById("imagem_carro");
+        const imagemMontadora = document.getElementById("imagem_montadora");
+        const tituloModelo = document.getElementById("titulo_modelo");
+        const textoMontadora = document.getElementById("texto_montadora");
+        const textoAno = document.getElementById("texto_ano");
+        const textoCategoria = document.getElementById("texto_categoria");
+        const classeLetra = document.getElementById("classe_letra");
+        const classePontos = document.getElementById("classe_pontos");
+        const tracao = document.getElementById("tracao");
+        const btnFavorito = document.getElementById("btn_favorito");
 
-    let carros = [];
-    let indiceAtual = 0;
+        let carros = [];
+        let indiceAtual = 0;
 
-    function carregarCarros() {
-        fetch(`/carros/listar/${sessionStorage.ID_USUARIO}`)
-            .then(resposta => resposta.json())
-            .then(listaCarros => {
-                carros = listaCarros;
+        function carregarCarros() {
+            fetch(`/carros/listar/${sessionStorage.ID_USUARIO}`)
+                .then(resposta => resposta.json())
+                .then(listaCarros => {
+                    carros = listaCarros;
 
-                if (!carros.length) {
-                    conteudo.innerHTML = `<div class="estado-vazio">Nenhum carro encontrado para exibicao.</div>`;
-                    return;
-                }
+                    if (!carros.length) {
+                        listaBotoes.innerHTML = `<div class="estado-vazio">Nenhum carro encontrado para exibicao.</div>`;
+                        return;
+                    }
 
-                renderizarBotoesCarro();
-                mostrarCarro(indiceAtual);
-            })
-            .catch(erro => console.log(erro));
-    }
-
-    function renderizarBotoesCarro() {
-        listaBotoes.innerHTML = "";
-
-        carros.forEach((carro, indice) => {
-            listaBotoes.innerHTML += `
-                <button class="btn-carro ${indice === indiceAtual ? "ativo" : ""}" onclick="selecionarCarro(${indice})">
-                    ${carro.modelo}
-                    <small>${carro.montadora} - ${carro.estilo}</small>
-                </button>
-            `;
-        });
-    }
-
-    function selecionarCarro(indice) {
-        indiceAtual = indice;
-        mostrarCarro(indiceAtual);
-        renderizarBotoesCarro();
-    }
-
-    function mostrarCarro(indice) {
-        const carro = carros[indice];
-
-        imagemCarro.src = `src/carros/${carro.nome}.png`;
-        imagemCarro.alt = `Imagem de ${carro.modelo}`;
-        tituloModelo.textContent = carro.modelo;
-        textoDetalhes.textContent = `${carro.montadora} - ${carro.estilo}`;
-        btnFavorito.disabled = false;
-        btnFavorito.textContent = carro.favorito ? "Desfavoritar" : "Favoritar";
-        btnFavorito.classList.toggle("favoritado", carro.favorito);
-    }
-
-    function alternarFavoritoAtual() {
-        const carroAtual = carros[indiceAtual];
-        let promessa;
-
-        if (carroAtual.favorito) {
-            promessa = fetch(`/favoritos/desfavoritar/${sessionStorage.ID_USUARIO}/${carroAtual.id}`, {
-                method: "DELETE"
-            });
-        } else {
-            promessa = fetch("/favoritos/favoritar", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    idUsuarioServer: sessionStorage.ID_USUARIO,
-                    idCarroServer: carroAtual.id
+                    renderizarMiniaturas();
+                    mostrarCarro(indiceAtual);
                 })
-            })
+                .catch(erro => console.log(erro));
         }
 
-        promessa
-            .then(function (resposta) {
-                if (!resposta.ok) {
-                    resposta.text().then(texto => alert(`Erro ${resposta.status}: ${texto}`));
-                } else {
-                    carros[indiceAtual].favorito = !carroAtual.favorito;
-                    mostrarCarro(indiceAtual);
-                }
-            })
-            .catch(function (erro) {
-                alert("Falha ao conectar com a API: " + erro);
+        function renderizarMiniaturas() {
+            listaBotoes.innerHTML = "";
+
+            carros.forEach((carro, indice) => {
+                listaBotoes.innerHTML += `
+                    <button class="miniatura ${indice === indiceAtual ? "ativo" : ""}"
+                            onclick="selecionarCarro(${indice})" title="${carro.modelo}">
+                        <img src="../assets/carros/${carro.modelo}.png" alt="${carro.modelo}">
+                    </button>
+                `;
             });
-    }
-</script>
+        }
+
+        function selecionarCarro(indice) {
+            indiceAtual = indice;
+            mostrarCarro(indiceAtual);
+            renderizarMiniaturas();
+        }
+
+        function mostrarCarro(indice) {
+            const carro = carros[indice];
+
+            imagemMontadora.src = `../assets/montadoras/${carro.montadora}.png`;
+            imagemMontadora.alt = carro.montadora;
+            imagemCarro.src = `../assets/carros/${carro.modelo}.png`;
+            imagemCarro.alt = `Imagem de ${carro.modelo}`;
+
+            tituloModelo.textContent = carro.modelo;
+            textoMontadora.textContent = carro.montadora;
+            textoAno.textContent = carro.ano || "";
+            textoCategoria.textContent = (carro.categoria || carro.estilo || "").toUpperCase();
+
+            classeLetra.textContent = carro.classe || "-";
+            classePontos.textContent = carro.pontos || "0";
+            tracao.textContent = carro.tracao || "--";
+
+            btnFavorito.disabled = false;
+            btnFavorito.textContent = carro.favorito ? "DESFAVORITAR" : "FAVORITAR";
+            btnFavorito.classList.toggle("favoritado", carro.favorito);
+        }
+
+        function alternarFavoritoAtual() {
+            const carroAtual = carros[indiceAtual];
+            let promessa;
+
+            if (carroAtual.favorito) {
+                promessa = fetch(`/favoritos/desfavoritar/${sessionStorage.ID_USUARIO}/${carroAtual.id}`, {
+                    method: "DELETE"
+                });
+            } else {
+                promessa = fetch("/favoritos/favoritar", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        idUsuarioServer: sessionStorage.ID_USUARIO,
+                        idCarroServer: carroAtual.id
+                    })
+                });
+            }
+
+            promessa
+                .then(function (resposta) {
+                    if (!resposta.ok) {
+                        resposta.text().then(texto => alert(`Erro ${resposta.status}: ${texto}`));
+                    } else {
+                        carros[indiceAtual].favorito = !carroAtual.favorito;
+                        mostrarCarro(indiceAtual);
+                    }
+                })
+                .catch(function (erro) {
+                    alert("Falha ao conectar com a API: " + erro);
+                });
+        }
+    </script>
+</body>
+
 </html>
