@@ -45,71 +45,89 @@
           <input type="password" placeholder="Confirme a Senha" id="ipt_confirmacao" class="inserts">
         </div>
         <div id="div_msg_confirmacao" class="div_erros"></div>
+        <div id="div_msg_log"></div>
 
         <button onclick="cadastrar()">Cadastrar</button>
       </div>
     </div>
-        <div class="lado-esquerdo">
-            <video autoplay muted loop playsinline id="background-video">
-                <source src="assets/videos/cadastro.mp4" type="video/mp4">
-            </video>
-        </div>
-    
+    <div class="lado-esquerdo">
+      <video autoplay muted loop playsinline id="background-video">
+        <source src="assets/videos/cadastro.mp4" type="video/mp4">
+      </video>
+    </div>
+</p>
   </div>
 </body>
 
 </html>
 
 <script>
-    function cadastrar() {
-        var nomeVar = ipt_nome.value;
-        var emailVar = ipt_email.value;
-        var senhaVar = ipt_senha.value;
-        var confirmacaoVar = ipt_confirmacao.value;
+  function cadastrar() {
+    var nomeVar = ipt_nome.value;
+    var emailVar = ipt_email.value;
+    var senhaVar = ipt_senha.value;
+    var confirmacaoVar = ipt_confirmacao.value;
 
-        div_msg_nome.innerHTML = "";
-        div_msg_email.innerHTML = "";
-        div_msg_senha.innerHTML = "";
-        div_msg_confirmacao.innerHTML = "";
+    div_msg_nome.innerHTML = "";
+    div_msg_email.innerHTML = "";
+    div_msg_senha.innerHTML = "";
+    div_msg_confirmacao.innerHTML = "";
 
-        if (nomeVar == "") {
-            div_msg_nome.innerHTML = "Preencha seu nome.";
-          }
-        if(emailVar == ""){
-            div_msg_email.innerHTML = "Preencha seu email.";
-          }
-        if(senhaVar == ""){
-            div_msg_senha.innerHTML = "Preencha todos os campos.";
-          }
-        if(confirmacaoVar == ""){
-            div_msg_confirmacao.innerHTML = "Preencha todos os campos.";
-        }
-        if (senhaVar != confirmacaoVar) {
-            div_msg_confirmacao.innerHTML = "As senhas não conferem.";
-        }
-
-        fetch("/usuarios/cadastrar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                nomeServer: nomeVar,
-                emailServer: emailVar,
-                senhaServer: senhaVar
-            })
-        }).then(function (resposta) {
-            if (resposta.ok) {
-                div_msg_confirmacao.innerHTML = "Cadastro realizado! Redirecionando para o login...";
-                setTimeout(function () {
-                    window.location = "login.html";
-                }, 2000);
-            } else {
-                throw "Houve um erro ao tentar realizar o cadastro!";
-            }
-        }).catch(function (erro) {
-            console.log(`#ERRO: ${erro}`);
-            div_msg_confirmacao.innerHTML = "Não foi possível cadastrar. Tente novamente.";
-        });
-
-        return false;
+    if (nomeVar == "") {
+      div_msg_nome.innerHTML = "Preencha seu nome";
+      return false;
     }
+    if (emailVar == "") {
+      div_msg_email.innerHTML = "Preencha seu email";
+      return false;
+    }
+    if (!emailVar.includes('@') || !emailVar.includes('.')) {
+      div_msg_email.innerHTML = "Formato de email inválido";
+      return false;
+    }
+    if (senhaVar == "") {
+      div_msg_senha.innerHTML = "Preencha sua senha";
+      return false;
+    }
+    if (senhaVar.length < 8) {
+      div_msg_senha.innerHTML = "A senha deve ter no mínimo 8 dígitos";
+      return false;
+    }
+    if (senhaVar.toUpperCase() == senhaVar) {
+      div_msg_senha.innerHTML = "A senha deve ter no mínimo um caractere minúsculo";
+      return false;
+    }
+    if (senhaVar.toLowerCase() == senhaVar) {
+      div_msg_senha.innerHTML = "A senha deve ter no mínimo um caractere maiúsculo";
+      return false;
+    }
+    if (senhaVar != confirmacaoVar) {
+      div_msg_confirmacao.innerHTML = "As senhas não conferem";
+      return false;
+    }
+
+    fetch("/usuarios/cadastrar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nomeServer: nomeVar,
+        emailServer: emailVar,
+        senhaServer: senhaVar
+      })
+    }).then(function (resposta) {
+      if (resposta.ok) {
+        div_msg_log.innerHTML = "Cadastro realizado! Redirecionando para o login...";
+        setTimeout(function () {
+          window.location = "login.html";
+        }, 2000);
+      } else {
+        throw "Houve um erro ao tentar realizar o cadastro!";
+      }
+    }).catch(function (erro) {
+      console.log(`#ERRO: ${erro}`);
+      div_msg_log.innerHTML = `<p style="color: red;">Não foi possível cadastrar. Tente novamente.</p>`;
+    });
+
+    return false;
+  }
 </script>
