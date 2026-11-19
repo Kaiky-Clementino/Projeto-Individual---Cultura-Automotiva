@@ -16,17 +16,23 @@
 </head>
 
 <body>
-
     <div class="container">
 
         <!-- Lado esquerdo: logo -->
         <div class="lado-esquerdo">
+            <nav class="barra-navegacao container-principal">
+                <div id="logo_nav"><img src="assets/logo_branco.png" id="logo"></div>
+                <a href="index.html" class="item-menu">HOME</a>
+                <a href="cadastro.html" class="botao-cadastro">CADASTRAR</a>
+            </nav>
             <video autoplay muted loop playsinline id="background-video">
                 <source src="assets/videos/login.mp4" type="video/mp4">
             </video>
         </div>
 
         <!-- Lado direito: formulário -->
+
+
         <div class="lado-direito">
             <div class="formulario">
                 <h1>Bem-vindo de Volta!</h1>
@@ -66,8 +72,8 @@
         if (emailVar == "") {
             div_msg_email.innerHTML = "Preencha seu e-mail.";
         }
-        
-        if (senhaVar == ""){
+
+        if (senhaVar == "") {
             div_msg_senha.innerHTML = "Preencha sua senha.";
         }
 
