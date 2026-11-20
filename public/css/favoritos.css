@@ -114,7 +114,7 @@ header {
 .bloco {
     background: var(--panel);
     position: relative;
-    height: 60vh;
+    height: 55vh;
 }
 
 .bloco-montadora {
@@ -138,18 +138,19 @@ header {
 
 .car-info h2 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1.6vw;
     font-weight: 700;
 }
 
 .car-info p {
     margin: 2px 0 0;
-    font-size: 1rem;
+    font-size: 1.25vw;
     color: var(--muted);
 }
 
 .car-info p.ano {
     color: var(--text);
+    font-size: 1.25vw;
     font-weight: 700;
 }
 
@@ -158,7 +159,7 @@ header {
     top: 18px;
     right: 22px;
     color: var(--yellow);
-    font-size: 0.9rem;
+    font-size: 1.6vw;
     font-weight: 700;
 }
 
@@ -171,7 +172,7 @@ header {
 }
 
 .car-image-wrap img {
-    max-width: 78%;
+    max-width: 70%;
     max-height: 100%;
     object-fit: contain;
     display: block;

@@ -29,8 +29,8 @@
 
             <div class="bloco bloco-carro">
                 <div class="car-info">
-                    <h2 id="titulo_modelo">Selecione um carro</h2>
-                    <p id="texto_montadora">Escolha um dos carros abaixo.</p>
+                    <h2 id="titulo_modelo"></h2>
+                    <p id="texto_montadora"></p>
                     <p id="texto_ano" class="ano"></p>
                 </div>
                 <span id="texto_categoria" class="categoria"></span>
@@ -119,8 +119,8 @@
             imagemCarro.src = `../assets/carros/${carro.modelo}.png`;
             imagemCarro.alt = `Imagem de ${carro.modelo}`;
 
-            tituloModelo.textContent = carro.modelo;
-            textoMontadora.textContent = carro.montadora;
+            tituloModelo.textContent = carro.modelo.toUpperCase();
+            textoMontadora.textContent = carro.montadora.toUpperCase();
             textoAno.textContent = carro.ano || "";
             textoCategoria.textContent = (carro.categoria || carro.estilo || "").toUpperCase();
 
