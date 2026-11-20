@@ -7,7 +7,6 @@
     --pink: #ff00a8;
     --yellow: #f3ff49;
     --blue: #5eb8ff;
-    --ok: #2ec27e;
 }
 
 * {
@@ -98,7 +97,7 @@ header {
 
 .page {
     margin-top: 100px;
-    padding: 22px 4vw 32px;
+    padding: 0px 4vw;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -114,7 +113,7 @@ header {
 .bloco {
     background: var(--panel);
     position: relative;
-    height: 55vh;
+    height: 58vh;
 }
 
 .bloco-montadora {
@@ -182,21 +181,19 @@ header {
     padding: 14px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
 }
 
 .linha-stats {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+
 }
 
 .badge-classe {
     width: 80px;
     text-align: center;
     font-weight: 700;
-    border-radius: 10px;
 }
 
 .classe-letra {
@@ -219,7 +216,7 @@ header {
     border-radius: 4px;
 }
 
-#imagem_tracao{
+#imagem_tracao {
     width: 100%;
 }
 
@@ -228,7 +225,7 @@ header {
     background: var(--pink);
     color: #ffffff;
     font-family: inherit;
-    font-size: 0.8rem;
+    font-size: 1vw;
     font-weight: 700;
     padding: 8px 0;
     width: 70%;
@@ -246,7 +243,8 @@ header {
 }
 
 .btn-favorito.favoritado {
-    background: var(--ok);
+    background: var(--yellow);
+    color: var(--nav-dark);
 }
 
 .miniaturas {

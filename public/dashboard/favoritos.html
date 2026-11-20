@@ -2,12 +2,14 @@
 <html lang="pt-br">
 
 <head>
+    <link rel="shortcut icon" href="../assets/icon/favicon2.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favoritos</title>
     <script src="../js/sessao.js"></script>
     <link rel="stylesheet" href="../css/favoritos.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body onload="/*validarSessao();*/ carregarCarros()">
@@ -50,9 +52,9 @@
                         <img src="" alt="" id="imagem_tracao">
                     </div>
                 </div>
-                <div class="caixa-cinza">
+                <div>
                     <div id="div_grafico">
-                        <canvas id="grafico_radar" style="margin: 25px;">
+                        <canvas id="grafico_radar">
                         </canvas>
                     </div>
                 </div>
@@ -258,7 +260,7 @@
                             pointLabels: {
                                 color: "#FFFFFF",
                                 font: {
-                                    size: 11.5,
+                                    size: 11,
                                     weight: "bold"
                                 },
                                 callback: function (rotulo, indice) {
