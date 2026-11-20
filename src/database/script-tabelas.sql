@@ -16,7 +16,7 @@ CREATE TABLE carro (
     estilo VARCHAR(50) NOT NULL,
     ano CHAR(4) NOT NULL,
     tipoTracao VARCHAR(3) NOT NULL,
-    categoria VARCHAR(2) NOT NULL,
+    classe VARCHAR(2) NOT NULL,
     pontuacao INT NOT NULL,
     velocidade DECIMAL(3,1) NOT NULL,
     aceleracao DECIMAL(3,1) NOT NULL,

@@ -193,40 +193,34 @@ header {
 }
 
 .badge-classe {
-    width: 52px;
+    width: 80px;
     text-align: center;
     font-weight: 700;
+    border-radius: 10px;
 }
 
 .classe-letra {
     display: block;
-    background: var(--blue);
-    color: #08090c;
-    font-size: 1rem;
+    font-size: 1vw;
     padding: 2px 0;
 }
 
 .classe-pontos {
     display: block;
-    background: #1a1d22;
-    color: #ffffff;
-    font-size: 1rem;
+    background: #ffffff;
+    color: #1a1d22;
+    font-size: 1vw;
     padding: 4px 0;
 }
 
 .tag-tracao {
-    background: var(--panel-light);
-    color: #08090c;
-    font-size: 0.8rem;
-    font-weight: 700;
+    width: 150px;
     padding: 6px 12px;
     border-radius: 4px;
 }
 
-.caixa-cinza {
-    flex: 1;
-    background: var(--panel-light);
-    min-height: 90px;
+#imagem_tracao{
+    width: 100%;
 }
 
 .btn-favorito {
@@ -238,7 +232,7 @@ header {
     font-weight: 700;
     padding: 8px 0;
     width: 70%;
-    align-self: flex-end;
+    align-self: center;
     cursor: pointer;
 }
 

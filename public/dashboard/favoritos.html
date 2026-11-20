@@ -7,6 +7,7 @@
     <title>Favoritos</title>
     <script src="../js/sessao.js"></script>
     <link rel="stylesheet" href="../css/favoritos.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body onload="/*validarSessao();*/ carregarCarros()">
@@ -42,12 +43,19 @@
             <aside class="bloco bloco-lateral">
                 <div class="linha-stats">
                     <div class="badge-classe">
-                        <span id="classe_letra" class="classe-letra">-</span>
-                        <span id="classe_pontos" class="classe-pontos">0</span>
+                        <span id="classe_letra" class="classe-letra"></span>
+                        <span id="classe_pontos" class="classe-pontos"></span>
                     </div>
-                    <div class="tag-tracao" id="tracao">--</div>
+                    <div class="tag-tracao" id="tracao">
+                        <img src="" alt="" id="imagem_tracao">
+                    </div>
                 </div>
-                <div class="caixa-cinza"></div>
+                <div class="caixa-cinza">
+                    <div id="div_grafico">
+                        <canvas id="grafico_radar" style="margin: 25px;">
+                        </canvas>
+                    </div>
+                </div>
                 <button id="btn_favorito" class="btn-favorito" onclick="alternarFavoritoAtual()" disabled>
                     FAVORITAR
                 </button>
@@ -69,13 +77,16 @@
         const textoCategoria = document.getElementById("texto_categoria");
         const classeLetra = document.getElementById("classe_letra");
         const classePontos = document.getElementById("classe_pontos");
-        const tracao = document.getElementById("tracao");
+        const tracao = document.getElementById("imagem_tracao");
         const btnFavorito = document.getElementById("btn_favorito");
 
+        let graficoRadar;
         let carros = [];
         let indiceAtual = 0;
 
         function carregarCarros() {
+            criarGrafico();
+
             fetch(`/carros/listar/${sessionStorage.ID_USUARIO}`)
                 .then(resposta => resposta.json())
                 .then(listaCarros => {
@@ -124,14 +135,35 @@
             textoAno.textContent = carro.ano || "";
             textoCategoria.textContent = (carro.categoria || carro.estilo || "").toUpperCase();
 
-            classeLetra.textContent = carro.classe || "-";
-            classePontos.textContent = carro.pontos || "0";
-            tracao.textContent = carro.tracao || "--";
+            classeLetra.textContent = carro.classe;
+            classePontos.textContent = carro.pontuacao;
+            tracao.src = `../assets/tracao/${carro.tipoTracao}.png`;
+            tracao.alt = `Tração ${carro.tipoTracao}`;
 
             btnFavorito.disabled = false;
             btnFavorito.textContent = carro.favorito ? "DESFAVORITAR" : "FAVORITAR";
             btnFavorito.classList.toggle("favoritado", carro.favorito);
+
+            atualizarGrafico(carro);
+
+            if (classeLetra.textContent == 'D') {
+                classeLetra.style.backgroundColor = "#6EB9EA";
+            } else if (classeLetra.textContent == 'C') {
+                classeLetra.style.backgroundColor = "#FECF37";
+            } else if (classeLetra.textContent == 'B') {
+                classeLetra.style.backgroundColor = "#E85622";
+            } else if (classeLetra.textContent == 'A') {
+                classeLetra.style.backgroundColor = "#B70505";
+            } else if (classeLetra.textContent == 'S1') {
+                classeLetra.style.backgroundColor = "#611B83";
+            } else if (classeLetra.textContent == 'S2') {
+                classeLetra.style.backgroundColor = "#3840A3";
+            } else if (classeLetra.textContent == 'X') {
+                classeLetra.style.backgroundColor = "#086833";
+            }
         }
+
+
 
         function alternarFavoritoAtual() {
             const carroAtual = carros[indiceAtual];
@@ -165,6 +197,95 @@
                     alert("Falha ao conectar com a API: " + erro);
                 });
         }
+
+        function criarGrafico() {
+            const grafico_radar = document.getElementById("grafico_radar");
+
+            graficoRadar = new Chart(grafico_radar, {
+                type: "radar",
+                data: {
+                    labels: ["VELOCIDADE", "ACELERAÇÃO", "ARRANCADA", "FRENAGEM", "DIRIGIBILIDADE", "OFFROAD"],
+                    datasets: [
+                        {
+                            label: "Performance",
+                            data: [0, 0, 0, 0, 0, 0],
+                            borderWidth: 2,
+                            borderColor: "#DFFF00",
+                            backgroundColor: "rgba(223, 255, 0, 0.18)",
+
+                            pointBackgroundColor: "#DFFF00",
+                            pointBorderColor: "#FFFFFF",
+                            pointBorderWidth: 1,
+                            pointRadius: 3,
+                            pointHoverRadius: 5
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.label + ": " + context.raw.toFixed(1);
+                                }
+                            }
+                        }
+                    },
+
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 10,
+                            beginAtZero: true,
+
+                            ticks: {
+                                stepSize: 2,
+                                display: false
+                            },
+
+                            grid: {
+                                color: "rgba(255, 255, 255, 0.18)"
+                            },
+
+                            angleLines: {
+                                color: "rgba(255, 255, 255, 0.25)"
+                            },
+
+                            pointLabels: {
+                                color: "#FFFFFF",
+                                font: {
+                                    size: 11.5,
+                                    weight: "bold"
+                                },
+                                callback: function (rotulo, indice) {
+                                    const valor = this.chart.data.datasets[0].data[indice];
+                                    return [rotulo, Number(valor).toFixed(1)];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        }
+
+        function atualizarGrafico(carro) {
+            graficoRadar.data.datasets[0].data = [
+                carro.velocidade,
+                carro.aceleracao,
+                carro.arrancada,
+                carro.frenagem,
+                carro.dirigibilidade,
+                carro.offroad
+            ];
+
+            graficoRadar.update();
+        }
+
     </script>
 </body>
 
