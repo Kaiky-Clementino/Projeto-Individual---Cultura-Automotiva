@@ -124,7 +124,7 @@ header {
   font-weight: 700;
 }
 
-.kpi-badge {
+#kpi-badge {
   margin-top: 16px;
   display: inline-block;
   background-color: var(--pink);

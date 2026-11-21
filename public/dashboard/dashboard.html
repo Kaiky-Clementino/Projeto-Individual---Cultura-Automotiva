@@ -12,7 +12,7 @@
     <script src="../js/sessao.js"></script>
 </head>
 
-<body>
+<body onload="carregarKpis()">
     <header>
         <nav class="barra-navegacao container-principal">
             <div id="logo_nav"><img src="../assets/logo_branco.png" id="logo"></div>
@@ -27,30 +27,36 @@
         <section class="cards-kpi">
             <article class="kpi-card kpi-card-destaque" id="kpi_mais_favoritado">
                 <h2>MAIS FAVORITADO</h2>
-                <p class="kpi-valor kpi-valor-amarelo">FERRARI F40</p>
-                <span class="kpi-badge">ORIGINAL</span>
+                <p class="kpi-valor kpi-valor-amarelo" id="carro_maisFavoritado"></p>
+                <span id="kpi-badge"></span>
             </article>
 
             <article class="kpi-card" id="kpi_total_favoritos">
                 <h2>TOTAL DE FAVORITOS</h2>
-                <p class="kpi-valor">50 <span class="kpi-legenda">FAVORITACOES</span></p>
+                <span class="kpi-valor" id="kpi-totalFavoritos"></span><span class="kpi-legenda">FAVORITAÇÕES</span>
             </article>
 
             <article class="kpi-card" id="kpi_catalogo_geral">
                 <h2>CATALOGO GERAL</h2>
-                <p class="kpi-valor">7 <span class="kpi-legenda">VEICULOS REGISTRADOS</span></p>
+                <span class="kpi-valor" id="kpi-totalVeiculos"></span> <span class="kpi-legenda">VEICULOS REGISTRADOS</span>
             </article>
         </section>
 
         <section class="graficos-grid">
             <article class="grafico-card grafico-card-grande">
                 <h2>TOP 5 CARROS MAIS FAVORITADOS</h2>
-                <div class="grafico-quadro" id="grafico_top5_carros"></div>
+                <div class="grafico-quadro" id="grafico_top5_carros">
+                    <canvas id="grafico_barra">
+                    </canvas>
+                </div>
             </article>
 
             <article class="grafico-card grafico-card-menor">
                 <h2>ESTILOS MAIS ESCOLHIDOS</h2>
-                <div class="grafico-quadro" id="grafico_estilos"></div>
+                <div class="grafico-quadro" id="grafico_estilos">
+                    <canvas id="grafico_rosca">
+                    </canvas>
+                </div>
             </article>
         </section>
 
@@ -61,6 +67,193 @@
             <div id="graficos"></div>
         </section>
     </main>
+
+    <script>
+        let graficoBarra;
+        let graficoRosca
+
+        function carregarKpis() {
+            fetch("/dashboard/kpis")
+                .then(resposta => resposta.json())
+                .then(dados => {
+                    let kpis = dados[0];
+
+                    document.getElementById("carro_maisFavoritado").textContent =
+                        kpis.carroMaisFavoritado.toUpperCase() || "Nenhum";
+
+                    document.getElementById("kpi-badge").textContent =
+                        kpis.estiloDoMaisFavoritado.toUpperCase() || "Nenhum";
+
+                    document.getElementById("kpi-totalFavoritos").textContent =
+                        kpis.totalFavoritacoes;
+
+                    document.getElementById("kpi-totalVeiculos").textContent =
+                        kpis.totalCarros;
+
+                })
+                .catch(erro => console.log(erro));
+        }
+
+        function criarGrafico() {
+            const grafico_barra = document.getElementById("grafico_barra");
+            const grafico_rosca = document.getElementById("grafico_rosca");
+
+            graficoBarra = new Chart(grafico_barra, {
+                type: "bar",
+                data: {
+                    labels: ["VELOCIDADE", "ACELERAÇÃO", "ARRANCADA", "FRENAGEM", "DIRIGIBILIDADE", "OFFROAD"],
+                    datasets: [
+                        {
+                            label: "Performance",
+                            data: [0, 0, 0, 0, 0, 0],
+                            borderWidth: 2,
+                            borderColor: "#DFFF00",
+                            backgroundColor: "rgba(223, 255, 0, 0.18)",
+
+                            pointBackgroundColor: "#DFFF00",
+                            pointBorderColor: "#FFFFFF",
+                            pointBorderWidth: 1,
+                            pointRadius: 3,
+                            pointHoverRadius: 5
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.label + ": " + context.raw.toFixed(1);
+                                }
+                            }
+                        }
+                    },
+
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 10,
+                            beginAtZero: true,
+
+                            ticks: {
+                                stepSize: 2,
+                                display: false
+                            },
+
+                            grid: {
+                                color: "rgba(255, 255, 255, 0.18)"
+                            },
+
+                            angleLines: {
+                                color: "rgba(255, 255, 255, 0.25)"
+                            },
+
+                            pointLabels: {
+                                color: "#FFFFFF",
+                                font: {
+                                    size: 11,
+                                    weight: "bold"
+                                },
+                                callback: function (rotulo, indice) {
+                                    const valor = this.chart.data.datasets[0].data[indice];
+                                    return [rotulo, Number(valor).toFixed(1)];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            graficoRosca = new Chart(grafico_rosca, {
+                type: "doughnut",
+                data: {
+                    labels: ["VELOCIDADE", "ACELERAÇÃO", "ARRANCADA", "FRENAGEM", "DIRIGIBILIDADE", "OFFROAD"],
+                    datasets: [
+                        {
+                            label: "Performance",
+                            data: [0, 0, 0, 0, 0, 0],
+                            borderWidth: 2,
+                            borderColor: "#DFFF00",
+                            backgroundColor: "rgba(223, 255, 0, 0.18)",
+
+                            pointBackgroundColor: "#DFFF00",
+                            pointBorderColor: "#FFFFFF",
+                            pointBorderWidth: 1,
+                            pointRadius: 3,
+                            pointHoverRadius: 5
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.label + ": " + context.raw.toFixed(1);
+                                }
+                            }
+                        }
+                    },
+
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 10,
+                            beginAtZero: true,
+
+                            ticks: {
+                                stepSize: 2,
+                                display: false
+                            },
+
+                            grid: {
+                                color: "rgba(255, 255, 255, 0.18)"
+                            },
+
+                            angleLines: {
+                                color: "rgba(255, 255, 255, 0.25)"
+                            },
+
+                            pointLabels: {
+                                color: "#FFFFFF",
+                                font: {
+                                    size: 11,
+                                    weight: "bold"
+                                },
+                                callback: function (rotulo, indice) {
+                                    const valor = this.chart.data.datasets[0].data[indice];
+                                    return [rotulo, Number(valor).toFixed(1)];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function atualizarGrafico(carro) {
+            graficoRadar.data.datasets[0].data = [
+                carro.velocidade,
+                carro.aceleracao,
+                carro.arrancada,
+                carro.frenagem,
+                carro.dirigibilidade,
+                carro.offroad
+            ];
+
+            graficoRadar.update();
+        }
+    </script>
+
+
 
     <!-- CODIGO LEGADO INATIVO (BASE) -->
     <!--
