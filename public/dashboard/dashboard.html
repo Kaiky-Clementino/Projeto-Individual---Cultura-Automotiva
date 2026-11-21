@@ -9,10 +9,11 @@
 
     <link rel="shortcut icon" href="../assets/icon/favicon2.ico" type="image/x-icon">
     <link rel="stylesheet" href="../css/dashboards.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/sessao.js"></script>
 </head>
 
-<body onload="carregarKpis()">
+<body onload="carregarKpis(), carregarGraficoFavoritos()">
     <header>
         <nav class="barra-navegacao container-principal">
             <div id="logo_nav"><img src="../assets/logo_branco.png" id="logo"></div>
@@ -38,7 +39,8 @@
 
             <article class="kpi-card" id="kpi_catalogo_geral">
                 <h2>CATALOGO GERAL</h2>
-                <span class="kpi-valor" id="kpi-totalVeiculos"></span> <span class="kpi-legenda">VEICULOS REGISTRADOS</span>
+                <span class="kpi-valor" id="kpi-totalVeiculos"></span> <span class="kpi-legenda">VEICULOS
+                    REGISTRADOS</span>
             </article>
         </section>
 
@@ -94,163 +96,82 @@
                 .catch(erro => console.log(erro));
         }
 
-        function criarGrafico() {
-            const grafico_barra = document.getElementById("grafico_barra");
-            const grafico_rosca = document.getElementById("grafico_rosca");
+        function carregarGraficoFavoritos() {
 
-            graficoBarra = new Chart(grafico_barra, {
-                type: "bar",
-                data: {
-                    labels: ["VELOCIDADE", "ACELERAÇÃO", "ARRANCADA", "FRENAGEM", "DIRIGIBILIDADE", "OFFROAD"],
-                    datasets: [
-                        {
-                            label: "Performance",
-                            data: [0, 0, 0, 0, 0, 0],
-                            borderWidth: 2,
-                            borderColor: "#DFFF00",
-                            backgroundColor: "rgba(223, 255, 0, 0.18)",
+            fetch("/dashboard/Top5Favoritados")
+                .then(resposta => resposta.json())
+                .then(dados => {
 
-                            pointBackgroundColor: "#DFFF00",
-                            pointBorderColor: "#FFFFFF",
-                            pointBorderWidth: 1,
-                            pointRadius: 3,
-                            pointHoverRadius: 5
+                    let modelos = dados.map(carro => carro.modelo);
+                    let favoritacoes = dados.map(carro => carro.favoritacoes);
+
+                    new Chart(document.getElementById("grafico_barra"), {
+                        type: "bar",
+                        data: {
+                            labels: modelos,
+                            datasets: [{
+                                label: "Favoritos",
+                                data: favoritacoes,
+                                backgroundColor: "#e53945",
+                                borderRadius: 5
+                            }]
                         },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    return context.label + ": " + context.raw.toFixed(1);
+                        options: {
+                            indexAxis: "y",
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true
                                 }
                             }
                         }
-                    },
+                    });
+                })
+                .catch(erro => console.log(erro));
 
-                    scales: {
-                        r: {
-                            min: 0,
-                            max: 10,
-                            beginAtZero: true,
+            fetch("/dashboard/percentualEstilos")
+                .then(resposta => resposta.json())
+                .then(dados => {
 
-                            ticks: {
-                                stepSize: 2,
-                                display: false
-                            },
+                    let estilos = dados.map(carro => carro.estilo);
+                    let favoritacoes = dados.map(carro => carro.favoritacoes);
 
-                            grid: {
-                                color: "rgba(255, 255, 255, 0.18)"
-                            },
-
-                            angleLines: {
-                                color: "rgba(255, 255, 255, 0.25)"
-                            },
-
-                            pointLabels: {
-                                color: "#FFFFFF",
-                                font: {
-                                    size: 11,
-                                    weight: "bold"
-                                },
-                                callback: function (rotulo, indice) {
-                                    const valor = this.chart.data.datasets[0].data[indice];
-                                    return [rotulo, Number(valor).toFixed(1)];
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            graficoRosca = new Chart(grafico_rosca, {
-                type: "doughnut",
-                data: {
-                    labels: ["VELOCIDADE", "ACELERAÇÃO", "ARRANCADA", "FRENAGEM", "DIRIGIBILIDADE", "OFFROAD"],
-                    datasets: [
-                        {
-                            label: "Performance",
-                            data: [0, 0, 0, 0, 0, 0],
-                            borderWidth: 2,
-                            borderColor: "#DFFF00",
-                            backgroundColor: "rgba(223, 255, 0, 0.18)",
-
-                            pointBackgroundColor: "#DFFF00",
-                            pointBorderColor: "#FFFFFF",
-                            pointBorderWidth: 1,
-                            pointRadius: 3,
-                            pointHoverRadius: 5
+                    new Chart(document.getElementById("grafico_rosca"), {
+                        type: "doughnut",
+                        data: {
+                            labels: estilos,
+                            datasets: [{
+                                label: "Favoritos",
+                                data: favoritacoes,
+                                backgroundColor: [
+                                    "#e53945",
+                                    "#252525",
+                                    "#686868",
+                                    "#a0a0a0",
+                                    "#d0d0d0",
+                                    "#8b1e2d"
+                                ]
+                            }]
                         },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    return context.label + ": " + context.raw.toFixed(1);
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: "bottom"
                                 }
                             }
                         }
-                    },
-
-                    scales: {
-                        r: {
-                            min: 0,
-                            max: 10,
-                            beginAtZero: true,
-
-                            ticks: {
-                                stepSize: 2,
-                                display: false
-                            },
-
-                            grid: {
-                                color: "rgba(255, 255, 255, 0.18)"
-                            },
-
-                            angleLines: {
-                                color: "rgba(255, 255, 255, 0.25)"
-                            },
-
-                            pointLabels: {
-                                color: "#FFFFFF",
-                                font: {
-                                    size: 11,
-                                    weight: "bold"
-                                },
-                                callback: function (rotulo, indice) {
-                                    const valor = this.chart.data.datasets[0].data[indice];
-                                    return [rotulo, Number(valor).toFixed(1)];
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+                    });
+                })
+                .catch(erro => console.log(erro));
         }
 
-        function atualizarGrafico(carro) {
-            graficoRadar.data.datasets[0].data = [
-                carro.velocidade,
-                carro.aceleracao,
-                carro.arrancada,
-                carro.frenagem,
-                carro.dirigibilidade,
-                carro.offroad
-            ];
-
-            graficoRadar.update();
-        }
     </script>
 
 
