@@ -6,7 +6,7 @@ function buscarKpis() {
 }
 
 function buscarTop5Favoritados() {
-    var instrucaoSql = `SELECT c.modelo, COUNT(*) AS favoritacoes FROM favorito f JOIN carro c ON c.id = f.fk_carro GROUP BY c.id, c.modelo ORDER BY favoritacoes DESC, c.modelo ASC LIMIT 5;`
+    var instrucaoSql = `SELECT c.modelo, c.estilo, COUNT(*) AS favoritacoes FROM favorito f JOIN carro c ON c.id = f.fk_carro GROUP BY c.id, c.modelo ORDER BY favoritacoes DESC, c.modelo ASC LIMIT 5;`
     return database.executar(instrucaoSql);
 
 }

@@ -14,20 +14,38 @@
 </head>
 
 <body onload="carregarKpis(), carregarGraficoFavoritos()">
+
     <header>
-        <nav class="barra-navegacao container-principal">
-            <div id="logo_nav"><img src="../assets/logo_branco.png" id="logo"></div>
-            <a href="../index.html" class="item-menu">HOME</a>
-            <a href="#" class="item-menu item-menu-ativo">DASHBOARD</a>
-            <a href="./favoritos.html" class="item-menu">FAVORITOS</a>
-            <a class="botao-sair" onclick="limparSessao()">SAIR</a>
+        <nav class="barra-navegacao">
+            <a href="../index.html" class="logo-site">
+                <img class="img-logo" src="../assets/logo_branco.png"></img>
+                <span>CULTURA AUTOMOTIVA</span>
+            </a>
+            <div class="menu-navegacao">
+                <a href="../index.html" class="item-menu">HOME</a>
+                <a href="./favoritos.html" class="item-menu">FAVORITOS</a>
+                <a href="./dashboard.html" class="item-menu item-menu-ativo">DASHBOARD</a>
+            </div>
+
+            <!-- AÇÕES DO USUÁRIO -->
+            <div class="menu-usuario">
+                <a href="./perfil.html" class="item-perfil">
+                    <span class="icone-perfil">
+                        <img src="" alt="">
+                    </span>
+                    <span>PERFIL</span>
+                </a>
+
+                <a class="botao-sair" onclick="limparSessao()">SAIR</a>
+            </div>
+
         </nav>
     </header>
 
     <main class="dashboard-page container-principal">
         <section class="cards-kpi">
             <article class="kpi-card kpi-card-destaque" id="kpi_mais_favoritado">
-                <h2>MAIS FAVORITADO</h2>
+                <h2>CARRO MAIS FAVORITADO</h2>
                 <p class="kpi-valor kpi-valor-amarelo" id="carro_maisFavoritado"></p>
                 <span id="kpi-badge"></span>
             </article>
@@ -35,12 +53,14 @@
             <article class="kpi-card" id="kpi_total_favoritos">
                 <h2>TOTAL DE FAVORITOS</h2>
                 <span class="kpi-valor" id="kpi-totalFavoritos"></span><span class="kpi-legenda">FAVORITAÇÕES</span>
+                <p class="subtitulo-legenda">Baseado nos favoritos dos usuários</p>
             </article>
 
             <article class="kpi-card" id="kpi_catalogo_geral">
                 <h2>CATALOGO GERAL</h2>
                 <span class="kpi-valor" id="kpi-totalVeiculos"></span> <span class="kpi-legenda">VEICULOS
                     REGISTRADOS</span>
+                <p class="subtitulo-legenda">Total de carros cadastrados</p>
             </article>
         </section>
 
@@ -55,9 +75,13 @@
 
             <article class="grafico-card grafico-card-menor">
                 <h2>ESTILOS MAIS ESCOLHIDOS</h2>
+                <p style="margin-top: -10px; font-size: 15px;">Baseado em todos os usuários</p>
+                <br>
                 <div class="grafico-quadro" id="grafico_estilos">
                     <canvas id="grafico_rosca">
                     </canvas>
+                    <br>
+                    <div id="legenda_estilos"></div>
                 </div>
             </article>
         </section>
@@ -98,7 +122,7 @@
 
         function carregarGraficoFavoritos() {
 
-            fetch("/dashboard/Top5Favoritados")
+            fetch("/dashboard/top5Favoritados")
                 .then(resposta => resposta.json())
                 .then(dados => {
 
@@ -112,13 +136,21 @@
                             datasets: [{
                                 label: "Favoritos",
                                 data: favoritacoes,
-                                backgroundColor: "#e53945",
-                                borderRadius: 5
+                                backgroundColor: [
+                                    "#e63946",
+                                    "#ff00a8",
+                                    "#eaff45",
+                                    "#59b8ff",
+                                    "#a64dff"
+                                ],
+                                borderRadius: 5,
+                                barThickness: 24
                             }]
                         },
                         options: {
                             indexAxis: "y",
                             responsive: true,
+                            maintainAspectRatio: false,
                             plugins: {
                                 legend: {
                                     display: false
@@ -127,286 +159,113 @@
                             scales: {
                                 x: {
                                     beginAtZero: true
+                                },
+                                y: {
+                                    grid: {
+                                        display: false
+                                    }
                                 }
                             }
                         }
                     });
-                })
-                .catch(erro => console.log(erro));
+                });
 
             fetch("/dashboard/percentualEstilos")
                 .then(resposta => resposta.json())
                 .then(dados => {
 
-                    let estilos = dados.map(carro => carro.estilo);
-                    let favoritacoes = dados.map(carro => carro.favoritacoes);
+                    let estilos = dados.map(item => item.estilo);
+                    let favoritacoes = dados.map(item => item.favoritacoes);
+                    let percentual = dados.map(item => item.percentual);
+
+                    let totalFavoritos = favoritacoes.reduce((total, valor) => total + valor, 0);
+
+                    let cores = [
+                        "#ff00a8",
+                        "#eaff45",
+                        "#59b8ff",
+                        "#a64dff",
+                        "#f04b22"
+                    ];
+
+                    let pluginCentro = {
+                        id: "textoCentro",
+
+                        afterDraw(chart) {
+                            let ctx = chart.ctx;
+                            let centroX = (chart.chartArea.left + chart.chartArea.right) / 2;
+                            let centroY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+
+                            ctx.save();
+
+                            ctx.textAlign = "center";
+                            ctx.textBaseline = "middle";
+
+                            ctx.font = "bold 36px Arial";
+                            ctx.fillStyle = "#f4f4f4";
+                            ctx.fillText(totalFavoritos.toLocaleString("pt-BR"), centroX, centroY - 10);
+
+                            ctx.font = "bold 14px Arial";
+                            ctx.fillStyle = "#bdbdbd";
+                            ctx.fillText("FAVORITOS", centroX, centroY + 23);
+
+                            ctx.restore();
+                        }
+                    };
 
                     new Chart(document.getElementById("grafico_rosca"), {
                         type: "doughnut",
+
                         data: {
                             labels: estilos,
+
                             datasets: [{
-                                label: "Favoritos",
                                 data: favoritacoes,
-                                backgroundColor: [
-                                    "#e53945",
-                                    "#252525",
-                                    "#686868",
-                                    "#a0a0a0",
-                                    "#d0d0d0",
-                                    "#8b1e2d"
-                                ]
+                                backgroundColor: cores,
+                                borderWidth: 0,
+                                hoverOffset: 4
                             }]
                         },
+
+                        plugins: [pluginCentro],
+
                         options: {
                             responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: "68%",
+
                             plugins: {
                                 legend: {
-                                    display: true,
-                                    position: "bottom"
+                                    display: false
                                 }
                             }
                         }
                     });
+
+                    let legenda = document.getElementById("legenda_estilos");
+
+                    dados.forEach((item, indice) => {
+                        legenda.innerHTML += `
+                <div class="item-legenda">
+                    <div class="legenda-nome">
+                        <span class="legenda-cor" style="background-color: ${cores[indice]}"></span>
+                        <span>${(item.estilo).toUpperCase()}</span>
+                    </div>
+
+                    <div class="legenda-valor">
+                        <strong>${item.percentual}%</strong>
+                        <span>(${item.favoritacoes})</span>
+                    </div>
+                </div>
+            `;
+                    });
                 })
+                .catch(erro => console.log("Erro ao carregar estilos:", erro))
                 .catch(erro => console.log(erro));
         }
 
     </script>
 
-
-
-    <!-- CODIGO LEGADO INATIVO (BASE) -->
-    <!--
-    <div class="janela">
-        <div class="header-left">
-            <h1>AquaTech</h1>
-
-            <div class="hello">
-                <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
-            </div>
-
-            <div class="btn-nav-white">
-                <a href="./cards.html">
-                    <h3>Aquários e Terrários</h3>
-                </a>
-            </div>
-
-            <div class="btn-nav">
-                <h3>Gráficos</h3>
-            </div>
-
-            <div class="btn-nav-white">
-                <a href="./mural.html">
-                    <h3>Mural de Avisos</h3>
-                </a>
-            </div>
-
-            <div class="btn-logout" onclick="limparSessao()">
-                <h3>Sair</h3>
-            </div>
-        </div>
-
-        <div class="dash">
-            <div id="alerta"></div>
-            <div class="btns-dash" id="btnAquario"></div>
-            <div id="graficos"></div>
-        </div>
-    </div>
-
-    <script>
-        b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
-
-        let proximaAtualizacao;
-
-        window.onload = exibirAquariosDoUsuario();
-
-        function exibirAquariosDoUsuario() {
-            var aquarios = JSON.parse(sessionStorage.AQUARIOS);
-            aquarios.forEach(item => {
-                document.getElementById("btnAquario").innerHTML += `
-                <button class="btn-chart" onclick="exibirAquario(${item.id})" id="btnAquario${item.id}">${item.descricao}</button>
-                `
-
-                document.getElementById("graficos").innerHTML += `
-                    <div id="grafico${item.id}" class="display-none">
-                        <h3 class="tituloGraficos">
-                            <span id="tituloAquario${item.id}">${item.descricao}</span>
-                        </h3>
-                        <div class="graph">
-                            <canvas id="myChartCanvas${item.id}"></canvas>
-                        </div>
-                        <div class="label-captura">
-                            <p id="avisoCaptura${item.id}" style="color: white"></p>
-                        </div>
-                    </div>
-                `
-
-                obterDadosGrafico(item.id)
-            });
-
-            if (aquarios.length > 0) {
-                exibirAquario(aquarios[0].id)
-            }
-        }
-
-        function alterarTitulo(idAquario) {
-            var tituloAquario = document.getElementById(`tituloAquario${idAquario}`)
-            var descricao = JSON.parse(sessionStorage.AQUARIOS).find(item => item.id == idAquario).descricao;
-            tituloAquario.innerHTML = "Ultimas medidas do <span style='color: #e6005a'>" + descricao + "</span>"
-        }
-
-        function exibirAquario(idAquario) {
-            let todosOsGraficos = JSON.parse(sessionStorage.AQUARIOS);
-
-            for (i = 0; i < todosOsGraficos.length; i++) {
-                if (todosOsGraficos[i].id != idAquario) {
-                    let elementoAtual = document.getElementById(`grafico${todosOsGraficos[i].id}`)
-                    if (elementoAtual.classList.contains("display-block")) {
-                        elementoAtual.classList.remove("display-block")
-                    }
-                    elementoAtual.classList.add("display-none")
-
-                    let btnAtual = document.getElementById(`btnAquario${todosOsGraficos[i].id}`)
-                    if (btnAtual.classList.contains("btn-pink")) {
-                        btnAtual.classList.remove("btn-pink")
-                    }
-                    btnAtual.classList.add("btn-white")
-                }
-            }
-
-            let graficoExibir = document.getElementById(`grafico${idAquario}`)
-            graficoExibir.classList.remove("display-none")
-            graficoExibir.classList.add("display-block")
-
-            let btnExibir = document.getElementById(`btnAquario${idAquario}`)
-            btnExibir.classList.remove("btn-white")
-            btnExibir.classList.add("btn-pink")
-        }
-
-        function obterDadosGrafico(idAquario) {
-
-            alterarTitulo(idAquario)
-
-            if (proximaAtualizacao != undefined) {
-                clearTimeout(proximaAtualizacao);
-            }
-
-            fetch(`/medidas/ultimas/${idAquario}`, { cache: 'no-store' }).then(function (response) {
-                if (response.ok) {
-                    response.json().then(function (resposta) {
-                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                        resposta.reverse();
-
-                        plotarGrafico(resposta, idAquario);
-
-                    });
-                } else {
-                    console.error('Nenhum dado encontrado ou erro na API');
-                }
-            })
-                .catch(function (error) {
-                    console.error(`Erro na obtencao dos dados p/ grafico: ${error.message}`);
-                });
-        }
-
-        function plotarGrafico(resposta, idAquario) {
-
-            console.log('iniciando plotagem do grafico...');
-
-            let labels = [];
-
-            let dados = {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Temperatura',
-                        data: [],
-                        fill: false,
-                        borderColor: 'rgb(199, 52, 52)',
-                        tension: 0.1
-                    }
-                ]
-            };
-
-            console.log('----------------------------------------------')
-            console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
-            console.log(resposta)
-
-            for (i = 0; i < resposta.length; i++) {
-                var registro = resposta[i];
-                labels.push(registro.momento_grafico);
-                dados.datasets[0].data.push(registro.temperatura);
-            }
-
-            console.log('----------------------------------------------')
-            console.log('O grafico sera plotado com os respectivos valores:')
-            console.log('Labels:')
-            console.log(labels)
-            console.log('Dados:')
-            console.log(dados.datasets)
-            console.log('----------------------------------------------')
-
-            const config = {
-                type: 'line',
-                data: dados,
-            };
-
-            let myChart = new Chart(
-                document.getElementById(`myChartCanvas${idAquario}`),
-                config
-            );
-
-            setTimeout(() => atualizarGrafico(idAquario, dados, myChart), 2000);
-        }
-
-        function atualizarGrafico(idAquario, dados, myChart) {
-
-            fetch(`/medidas/tempo-real/${idAquario}`, { cache: 'no-store' }).then(function (response) {
-                if (response.ok) {
-                    response.json().then(function (novoRegistro) {
-
-                        obterdados(idAquario);
-                        console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
-                        console.log(`Dados atuais do grafico:`);
-                        console.log(dados);
-
-                        let avisoCaptura = document.getElementById(`avisoCaptura${idAquario}`)
-                        avisoCaptura.innerHTML = ""
-
-                        if (novoRegistro[0].momento_grafico == dados.labels[dados.labels.length - 1]) {
-                            console.log("---------------------------------------------------------------")
-                            console.log("Como nao ha dados novos para captura, o grafico nao atualizara.")
-                            avisoCaptura.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Foi trazido o dado mais atual capturado pelo sensor. <br> Como nao ha dados novos a exibir, o grafico nao atualizara."
-                            console.log("Horario do novo dado capturado:")
-                            console.log(novoRegistro[0].momento_grafico)
-                            console.log("Horario do ultimo dado capturado:")
-                            console.log(dados.labels[dados.labels.length - 1])
-                            console.log("---------------------------------------------------------------")
-                        } else {
-                            dados.labels.shift();
-                            dados.labels.push(novoRegistro[0].momento_grafico);
-
-                            dados.datasets[0].data.shift();
-                            dados.datasets[0].data.push(novoRegistro[0].temperatura);
-
-                            myChart.update();
-                        }
-
-                        proximaAtualizacao = setTimeout(() => atualizarGrafico(idAquario, dados, myChart), 2000);
-                    });
-                } else {
-                    console.error('Nenhum dado encontrado ou erro na API');
-                    proximaAtualizacao = setTimeout(() => atualizarGrafico(idAquario, dados, myChart), 2000);
-                }
-            })
-                .catch(function (error) {
-                    console.error(`Erro na obtencao dos dados p/ grafico: ${error.message}`);
-                });
-
-        }
-    </script>
-    -->
 </body>
 
 </html>
