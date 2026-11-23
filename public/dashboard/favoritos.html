@@ -13,13 +13,31 @@
 </head>
 
 <body onload="/*validarSessao();*/ carregarCarros()">
-    <header>
-        <nav class="barra-navegacao container-principal">
-            <div id="logo_nav"><img src="../assets/logo_branco.png" id="logo"></div>
-            <a href="../index.html" class="item-menu">HOME</a>
-            <a href="#" class="item-menu" style="background-color: #f3ff49; color: #08090c;">FAVORITOS</a>
-            <a href="dashboard.html" class="item-menu">DASHBOARD</a>
-            <a class="botao-sair" onclick="limparSessao()">SAIR</a>
+
+        <header>
+        <nav class="barra-navegacao">
+            <a href="../index.html" class="logo-site">
+                <img class="img-logo" src="../assets/logo_branco.png"></img>
+                <span>CULTURA AUTOMOTIVA</span>
+            </a>
+            <div class="menu-navegacao">
+                <a href="../index.html" class="item-menu">HOME</a>
+                <a href="./favoritos.html" class="item-menu item-menu-ativo">FAVORITOS</a>
+                <a href="./dashboard.html" class="item-menu">DASHBOARD</a>
+            </div>
+
+            <!-- AÇÕES DO USUÁRIO -->
+            <div class="menu-usuario">
+                <a href="./perfil.html" class="item-perfil">
+                    <span class="icone-perfil">
+                        <img src="" alt="">
+                    </span>
+                    <span>PERFIL</span>
+                </a>
+
+                <a class="botao-sair" onclick="limparSessao()">SAIR</a>
+            </div>
+
         </nav>
     </header>
 
