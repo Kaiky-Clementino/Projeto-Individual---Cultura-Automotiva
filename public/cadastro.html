@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>AquaTech | Cadastro</title>
+  <title>Automobilismo | Cadastro</title>
 
   <script src="./js/sessao.js"></script>
 
@@ -16,11 +16,24 @@
 </head>
 
 <body>
-  <!--header inicio-->
+  <header>
+        <nav class="barra-navegacao">
+            <a href="index.html" class="logo-site">
+                <img class="img-logo" src="../assets/logo_branco.png" alt="Logo">
+                <span>CULTURA AUTOMOTIVA</span>
+            </a>
+
+            <div class="menu-navegacao">
+                <a href="index.html" class="item-menu">HOME</a>
+                <a href="cadastro.html" class="item-menu item-menu-ativo">CADASTRO</a>
+                <a href="login.html" class="item-menu">LOGIN</a>
+            </div>
+        </nav>
+    </header>
 
   <div class="container">
-    <!-- Lado direito: formulário -->
-    <div class="lado-direito">
+    <!-- Formulário -->
+    <div class="lado-form">
       <div class="formulario">
         <h1>OLÁ!</h1>
         <br>
@@ -50,20 +63,15 @@
         <button onclick="cadastrar()">Cadastrar</button>
       </div>
     </div>
-    <div class="lado-esquerdo">
-      <nav class="barra-navegacao container-principal">
-        <div id="logo_nav"><img src="assets/logo_branco.png" id="logo"></div>
-        <a href="index.html" class="item-menu">HOME</a>
-        <a href="login.html" class="botao-cadastro">LOGIN</a>
-      </nav>
+
+    <!-- Vídeo -->
+    <div class="lado-video">
       <video autoplay muted loop playsinline id="background-video">
         <source src="assets/videos/cadastro.mp4" type="video/mp4">
       </video>
     </div>
-    </p>
   </div>
 </body>
-
 </html>
 
 <script>

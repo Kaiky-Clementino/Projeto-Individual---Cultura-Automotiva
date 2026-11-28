@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AquaTech | Login</title>
+    <title>Automobilismo | Login</title>
 
     <script src="./js/sessao.js"></script>
 
@@ -16,37 +16,42 @@
 </head>
 
 <body>
+    <header>
+        <nav class="barra-navegacao">
+            <a href="index.html" class="logo-site">
+                <img class="img-logo" src="../assets/logo_branco.png" alt="Logo">
+                <span>CULTURA AUTOMOTIVA</span>
+            </a>
+
+            <div class="menu-navegacao">
+                <a href="index.html" class="item-menu">HOME</a>
+                <a href="cadastro.html" class="item-menu">CADASTRO</a>
+                <a href="login.html" class="item-menu item-menu-ativo">LOGIN</a>
+            </div>
+        </nav>
+    </header>
+
     <div class="container">
 
-        <!-- Lado esquerdo: logo -->
-        <div class="lado-esquerdo">
-            <nav class="barra-navegacao container-principal">
-                <div id="logo_nav"><img src="assets/logo_branco.png" id="logo"></div>
-                <a href="index.html" class="item-menu">HOME</a>
-                <a href="cadastro.html" class="botao-cadastro">CADASTRAR</a>
-            </nav>
+        <!-- Lado esquerdo: vídeo -->
+        <div class="lado-video">
             <video autoplay muted loop playsinline id="background-video">
                 <source src="assets/videos/login.mp4" type="video/mp4">
             </video>
         </div>
 
         <!-- Lado direito: formulário -->
-
-
-        <div class="lado-direito">
+        <div class="lado-form">
             <div class="formulario">
                 <h1>Bem-vindo de Volta!</h1>
                 <p>Realize seu login</p>
 
                 <div class="campo">
-                    <img src="assets/icons/mail.svg" alt="">
                     <input type="text" placeholder="seu@email.com" id="email_input">
-
                 </div>
                 <div id="div_msg_email" class="div_erros"></div>
 
                 <div class="campo">
-                    <img src="assets/icons/lock.svg" alt="">
                     <input type="password" placeholder="*******************" id="senha_input">
                 </div>
                 <div id="div_msg_senha" class="div_erros"></div>
@@ -56,7 +61,7 @@
                 <a href="#" class="esqueceu">Esqueceu a senha?</a>
             </div>
         </div>
-
+    </div>
 </body>
 
 </html>
