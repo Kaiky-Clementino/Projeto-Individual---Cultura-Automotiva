@@ -194,6 +194,12 @@ main {
 .card-carro {
   overflow: hidden;
   background-color: #15181d;
+  filter: grayscale(100%);
+  transition: filter 0.5s ease;
+}
+
+.card-carro:hover{
+  filter: grayscale(0%);
 }
 
 .card-carro:nth-child(1) {
