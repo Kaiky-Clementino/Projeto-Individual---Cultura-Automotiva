@@ -24,6 +24,7 @@ body {
   height: 100%;
 }
 
+
 .barra-navegacao {
     width: 100%;
     height: 54px;
@@ -229,6 +230,18 @@ body {
 
 #legenda_estilos{
   padding-top: 200px;
+}
+
+.grafico_barra{
+  width: 500px;
+  height: 500px;
+  border: 5px red solid;
+}
+
+.grafico-card-grande .grafico-quadro {
+    position: relative;
+    width: 100%;
+    height: 350px;
 }
 
 /* COMPATIBILIDADE COM IDS/CLASSES LEGADAS */
