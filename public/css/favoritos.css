@@ -16,7 +16,7 @@
 body {
     margin: 0;
     min-height: 100vh;
-    font-family: "Montserrat", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Poppins", sans-serif;
     color: var(--text);
     background-color: #1b1f27;
     background-image: url('../assets/background_favoritos.png');
@@ -40,7 +40,6 @@ header {
     background-color: var(--nav-dark);
     overflow: hidden;
     box-sizing: border-box;
-    margin-bottom: -5vw;
 }
 
 .logo-site {
@@ -93,38 +92,6 @@ header {
     color: #171717;
 }
 
-/* PERFIL E SAIR */
-
-.menu-usuario {
-    display: flex;
-    align-items: stretch;
-    gap: 10px;
-    padding-right: 20px;
-}
-
-.item-perfil {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.icone-perfil {
-    width: 29px;
-    height: 29px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f5a5d0;
-    color: #21152f;
-    border-radius: 50%;
-}
-
 .botao-sair {
     display: flex;
     align-items: center;
@@ -132,6 +99,7 @@ header {
     align-self: center;
     width: 62px;
     height: 34px;
+    margin-right: 40px;
     background-color: var(--pink);
     color: #ffffff;
     text-decoration: none;
