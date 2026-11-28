@@ -130,6 +130,7 @@ body {
     align-self: center;
     width: 62px;
     height: 34px;
+    margin-right: 40px;
     background-color: var(--pink);
     color: #ffffff;
     text-decoration: none;

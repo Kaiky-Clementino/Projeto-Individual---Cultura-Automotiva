@@ -13,7 +13,7 @@
     <script src="../js/sessao.js"></script>
 </head>
 
-<body onload="carregarKpis(), carregarGraficoFavoritos()">
+<body onload="carregarKpis(), carregarGraficoFavoritos(), validarSessao()">
 
     <header>
         <nav class="barra-navegacao">
@@ -28,13 +28,13 @@
             </div>
 
             <!-- AÇÕES DO USUÁRIO -->
-            <div class="menu-usuario">
+            <!-- <div class="menu-usuario">
                 <a href="./perfil.html" class="item-perfil">
                     <span class="icone-perfil">
                         <img src="" alt="">
                     </span>
                     <span>PERFIL</span>
-                </a>
+                </a> -->
 
                 <a class="botao-sair" onclick="limparSessao()">SAIR</a>
             </div>
@@ -126,7 +126,7 @@
                 .then(resposta => resposta.json())
                 .then(dados => {
 
-                    let modelos = dados.map(carro => carro.modelo);
+                    let modelos = dados.map(carro => (carro.modelo).toUpperCase());
                     let favoritacoes = dados.map(carro => carro.favoritacoes);
 
                     new Chart(document.getElementById("grafico_barra"), {
@@ -160,12 +160,28 @@
                                 x: {
                                     beginAtZero: true,
                                     ticks: {
-                                        stepSize: 1
+                                        stepSize: 1,
+                                        color: 'white',
+                                        font: {
+                                            family: 'Arial',
+                                            size: 12,
+                                            weight: 'bold',
+                                            style: 'italic'
+                                        }
                                     }
                                 },
                                 y: {
                                     grid: {
                                         display: false
+                                    },
+                                    ticks: {
+                                        color: 'white',
+                                        font: {
+                                            family: 'Arial',
+                                            size: 12,
+                                            weight: 'bold',
+                                            style: 'italic'
+                                        }
                                     }
                                 }
                             }
