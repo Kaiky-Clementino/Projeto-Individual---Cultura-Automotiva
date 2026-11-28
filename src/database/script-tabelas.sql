@@ -42,3 +42,30 @@ INSERT INTO carro() VALUES
     (DEFAULT, 'jesko', 'koenigsegg', 'hiper', '2019', 'RWD', 'S2', 998, 10.0, 9.9, 9.8, 9.6, 9.7, 4.2),
     (DEFAULT, 'charger', 'dodge', 'muscle', '1970', 'RWD', 'B', 650, 7.0, 6.2, 7.8, 4.8, 5.6, 3.5),
     (DEFAULT, 'f40', 'ferrari', 'original', '1993', 'RWD', 'S1', 860, 8.7, 8.5, 8.4, 8.0, 8.7, 3.8);
+
+CREATE VIEW vw_kpis AS
+	SELECT
+            (SELECT c.modelo
+             FROM favorito f
+             JOIN carro c ON c.id = f.fk_carro
+             GROUP BY c.id, c.modelo
+             ORDER BY COUNT(*) DESC, c.modelo ASC
+             LIMIT 1) AS carroMaisFavoritado,
+             
+             (SELECT c.estilo
+             FROM favorito f
+             JOIN carro c ON c.id = f.fk_carro
+             GROUP BY c.id, c.modelo
+             ORDER BY COUNT(*) DESC, c.modelo ASC
+             LIMIT 1) AS estiloDoMaisFavoritado,
+
+            (SELECT COUNT(*) FROM favorito) AS totalFavoritacoes,
+
+            (SELECT COUNT(*) FROM carro) AS totalCarros,
+
+            (SELECT COUNT(*)
+             FROM favorito f
+             JOIN carro c ON c.id = f.fk_carro
+             GROUP BY c.id, c.modelo
+             ORDER BY COUNT(*) DESC, c.modelo ASC
+             LIMIT 1) AS quantidadeFavoritos;
